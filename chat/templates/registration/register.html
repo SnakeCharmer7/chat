@@ -1,0 +1,16 @@
+{% extends 'chat/base.html' %}
+
+{% block content %}
+
+<div class="form-signin w-100 mx-auto mt-5 p-4 bg-white shadow rounded" style="max-width: 400px;">
+    <p class="h2 mb-3 fw-bold text-center">Sign up</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary w-100 py-2">Sign up</button>
+    </form>
+    <p class="mt-5 mb-3 text-body-secondary">Already have an account? 
+    <a href="{% url 'login' %}" style="text-decoration: none;">Log in</a></p>
+</div>
+
+{% endblock %}

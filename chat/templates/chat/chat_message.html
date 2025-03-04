@@ -1,0 +1,9 @@
+{% if message.author == user %}
+    <div class="text-end mb-4">
+        <span class="my-message">{{message.text}}</span>
+    </div>
+{% else %}
+    <div class="mb-4">
+        <b>{{message.author.username}}:</b> <span class="chat-message">{{message.text}}</span>
+    </div>
+{% endif %}

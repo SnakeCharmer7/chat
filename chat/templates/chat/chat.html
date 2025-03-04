@@ -1,0 +1,39 @@
+{% extends "chat/base.html" %}
+
+{% block content %}
+
+<div class="container d-flex flex-column vh-75">
+    <h3 class="text-center fw-bold mt-3">Public Chat</h3>
+    <div class="text-center bg-dark py-2 rounded-top" style="color: blanchedalmond;">
+        <span id="online-count"></span>online
+    </div>
+    <div class="mx-auto bg-dark text-light p-3 pt-4 rounded-bottom flex-grow-1 w-100 w-md-75 w-lg-50 overflow-y-auto" style="max-height: 65vh;" id="chat_messages">
+        {% for message in chat_messages reversed %}
+            {% include 'chat/chat_message.html' %}
+        {% endfor %}
+    </div>
+    <form class="w-100 w-md-75 w-lg-50 mx-auto my-2"
+        hx-ext="ws"
+        ws-connect="ws/chatroom/public-chat"
+        ws-send
+        _="on htmx:wsAfterSend reset() me">
+        <div class="input-group">
+        {% csrf_token %}
+        {{ form.text }}
+        <button class="btn btn-outline-success">Send</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+<script>
+    function scrollToBottom() {
+        const container = document.getElementById('chat_messages');
+        container.scrollTop = container.scrollHeight;
+    }
+    scrollToBottom()
+</script>
+{% endblock %}
