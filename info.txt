@@ -1,3 +1,0 @@
-REDIS SERVER:
-cd d:\coding\Redis
-./redis-server
