@@ -11,16 +11,25 @@
     <script src="https://unpkg.com/hyperscript.org@0.9.14"></script>
     <style>
         .chat-message {
-            background: white;
+            background: #f1f0f0;
             color: black;
-            padding: 8px;
-            border-radius: 5px;
+            max-width: 70%;
+            border-radius: 10px;
         }
         .my-message {
             background: #198754;
-            padding: 8px;
-            border-radius: 5px;
-            width: auto;
+            color: white;
+            max-width: 70%;
+            border-radius: 10px;
+        }
+        .message-author {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: gray;
+            margin-left: 53px;
+        }
+        .bio {
+            height: 100px;
         }
     </style>
 </head>
@@ -40,12 +49,12 @@
                         </ul>
                     </div>
                     <div class="dropdown">
-                        <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ user }}
+                        <button class="btn btn-dark dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="{{ user.profile.avatar }}" style="height: 25px; border-radius: 50%;">&nbsp;{{ user.profile.name }}
                         </button>
                         <ul class="dropdown-menu dropdown-menu-dark">
-                            <li><a class="dropdown-item" href="#">My Profile</a></li>
-                            <li><a class="dropdown-item" href="#">Edit Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
+                            <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Edit Profile</a></li>
                             <li><a class="dropdown-item" href="#">Create Chat</a></li>
                             <form method="POST" action="{% url 'logout' %}" id="logout-form" style="display: none;">
                                 {% csrf_token %}

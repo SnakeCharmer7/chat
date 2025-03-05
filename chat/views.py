@@ -14,7 +14,7 @@ def chat_view(request):
 
     if request.htmx:
         form = ChatmessageCreateForm(request.POST)
-        if form.is_valid:
+        if form.is_valid():
             message = form.save(commit=False)
             message.author = request.user
             message.group = chat_group
@@ -30,5 +30,5 @@ def chat_view(request):
 
 class SingUpView(generic.CreateView):
     template_name = "registration/register.html"
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('profile_edit')
     form_class = UserCreationForm

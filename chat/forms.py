@@ -31,8 +31,8 @@ class UserCreationForm(forms.ModelForm):
     def clean_username(self):
         username = self.cleaned_data.get('username')
 
-        if len(username) < 8:
-            raise forms.ValidationError("Username must be at least 8 characters long.")
+        if len(username) < 3:
+            raise forms.ValidationError("Username must be at least 3 characters long.")
         if len(username) >= 20:
             raise forms.ValidationError("Username must contain a maximum of 20 characters.")
         if not re.match(r"^[a-zA-Z0-9_-]+$", username):

@@ -1,0 +1,21 @@
+{% extends 'chat/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="mx-auto mt-5 p-4 bg-white shadow rounded text-center" style="max-width: 750px;">
+        <h1 class="text-start fw-bold">Edit Profile</h1>
+        <img src="{{ user.profile.avatar }}" alt="avatar" style="height: 140px; border-radius: 50%;">
+        <h2 class="fw-bold">{{ user.profile.name }}</h2>
+        <p class="text-secondary mb-0">@{{user}}</p>
+        <form method="POST" enctype="multipart/form-data" class="text-start">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-success btn-lg mt-2" type="submit">Sumbit</button>   
+            <button class="btn btn-secondary btn-lg mt-2" type="button" onclick="window.history.back();">Cancel</button>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -1,9 +1,15 @@
 {% if message.author == user %}
-    <div class="text-end mb-4">
-        <span class="my-message">{{message.text}}</span>
+    <div class="mb-2 text-end">
+        <div class="my-message p-2 d-inline-block">
+            {{ message.text }}
+        </div>
     </div>
 {% else %}
-    <div class="mb-4">
-        <b>{{message.author.username}}:</b> <span class="chat-message">{{message.text}}</span>
+    <div class="mb-2 text-start">
+        <div class="message-author">{{ message.author.username }}</div>
+        <img src="{{ message.author.profile.avatar }}" alt="avatar" style="height: 38px; border-radius: 50%; margin-right: 7px;">
+        <div class="chat-message p-2 d-inline-block">
+            {{ message.text }}
+        </div>
     </div>
 {% endif %}
