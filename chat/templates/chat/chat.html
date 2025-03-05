@@ -3,18 +3,32 @@
 {% block content %}
 
 <div class="container d-flex flex-column vh-75">
-    <h3 class="text-center fw-bold mt-3">Public Chat</h3>
+    {% if other_user %}
+    <h4 class="text-start fw-bold mt-3">Direct Message</h4>
+    {% else %}
+    <h3 class="text-start fw-bold mt-3">Public Chat</h3>
+    {% endif %}
     <div class="text-center bg-dark py-2 rounded-top" style="color: blanchedalmond;">
+        {% if other_user %}
+        <a href="{% url 'profile' other_user.username %}" class="nav-link">
+            <div class="text-white">
+                <img src="{{ other_user.profile.avatar }}" alt="avatar" style="height: 38px; border-radius: 50%; margin-right: 7px;">
+                {{ other_user.profile.name }}
+                <span class="text-secondary fw-bold small">@{{other_user.profile}}</span>
+            </div>
+        </a>
+        {% else %}
         <span id="online-count"></span>online
+        {% endif %}
     </div>
-    <div class="mx-auto bg-dark text-light p-3 pt-4 rounded-bottom flex-grow-1 w-100 w-md-75 w-lg-50 overflow-y-auto" style="max-height: 65vh;" id="chat_messages">
+    <div class="mx-auto bg-dark text-light p-3 pt-4 rounded-bottom flex-grow-1 w-100 w-md-75 w-lg-50 overflow-y-auto" style="height: 65vh;" id="chat_messages">
         {% for message in chat_messages reversed %}
             {% include 'chat/chat_message.html' %}
         {% endfor %}
     </div>
     <form class="w-100 w-md-75 w-lg-50 mx-auto my-2"
         hx-ext="ws"
-        ws-connect="ws/chatroom/public-chat"
+        ws-connect="/ws/chatroom/{{ chatroom_name }}"
         ws-send
         _="on htmx:wsAfterSend reset() me">
         <div class="input-group">

@@ -4,10 +4,15 @@
 
 <div class="container">
     <div class="mx-auto mt-5 p-4 bg-white shadow rounded text-center" style="max-width: 750px;">
-        <img src="{{ user.profile.avatar }}" alt="avatar" style="height: 140px; border-radius: 50%;">
-        <h2 class="fw-bold">{{ user.profile.name }}</h2>
-        <p class="text-secondary">@{{user}}</p>
-        <p>{{ user.profile.bio }}</p>
+        <img src="{{ profile.avatar }}" alt="avatar" style="height: 140px; border-radius: 50%;">
+        <h2 class="fw-bold">{{ profile.name }}</h2>
+        <p class="text-secondary">@{{profile}}</p>
+        {% if profile.bio %}
+            <p>{{ profile.bio }}</p>
+        {% endif %}
+        {% if profile.user != user %}
+            <a class="btn btn-primary" href="{% url 'start-chat' profile.user.username %}">Chat with me</a>
+        {% endif %}
     </div>
 </div>
 
