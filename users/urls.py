@@ -3,6 +3,6 @@ from .views import *
 
 
 urlpatterns = [
-    path("", profile_view, name="profile"),
-    path("edit/", profile_edit_view, name="profile_edit"),
+    path("", ProfileDetailView.as_view(), name="profile"),
+    path("edit/", ProfileEditView.as_view(), name="profile_edit"),
 ]
