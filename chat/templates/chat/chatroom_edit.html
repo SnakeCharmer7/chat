@@ -1,0 +1,37 @@
+{% extends 'chat/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="mx-auto mt-5 p-4 bg-white shadow rounded" style="max-width: 750px;">
+        <h2 class="fw-bold">Edit Chat</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+
+            <div class="my-4">
+                <h3>Members</h3>
+                {% for member in chat_group.members.all %}
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center py-2">
+                        <img class="" src="{{ member.profile.avatar }}" style="height: 50px; border-radius: 50%; margin-right: 5px;">
+                        <div>
+                            <span class="fs-5 fw-bold">{{ member.profile.name }}</span> 
+                            <span class="fw-bold text-secondary">@{{ member.username }}</span>
+                        </div>
+                    </div>
+                    {% if member != chat_group.admin %}
+                    <input type="checkbox" name="remove_members" value="{{ member.id }}">
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-success btn-lg" type="submit">Update</button>
+                <a href="{% url 'delete_chatroom' chat_group.group_name %}" class="text-secondary nav-link">Delete Chatroom</a>
+            </div>
+        </form> 
+    </div>
+</div>
+
+{% endblock %}

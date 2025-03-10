@@ -19,6 +19,34 @@ class ChatmessageCreateForm(forms.ModelForm):
         })
 
 
+class NewGroupForm(forms.ModelForm):
+    class Meta:
+        model = ChatGroup
+        fields = ['groupchat_name']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['groupchat_name'].label = ""
+        self.fields['groupchat_name'].widget.attrs.update({
+            'placeholder': 'Add name ...', 
+            'class': 'form-control mt-3', 
+            'autofocus': True
+        })
+
+
+class ChatroomEditForm(forms.ModelForm):
+    class Meta:
+        model = ChatGroup
+        fields = ['groupchat_name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['groupchat_name'].label = ""
+        self.fields['groupchat_name'].widget.attrs.update({
+            'class': 'form-control mt-3'
+        })
+
+
 class UserCreationForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput, min_length=8, required=True)
     password_confirm = forms.CharField(widget=forms.PasswordInput, required=True)

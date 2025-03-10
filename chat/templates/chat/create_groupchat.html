@@ -1,0 +1,16 @@
+{% extends 'chat/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="mx-auto mt-5 p-4 bg-white shadow rounded" style="max-width: 750px;">
+        <h1 class="fw-bold">New Group Chat</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button class="btn btn-primary btn-lg mt-3" type="submit">Create Group Chat</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

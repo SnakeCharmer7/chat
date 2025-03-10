@@ -3,9 +3,36 @@
 {% block content %}
 
 <div class="container d-flex flex-column vh-75">
+    {% if chat_group.groupchat_name %}
+    <div class="d-flex justify-content-between align-items-center">
+        <h3 class="text-start fw-bold mt-3">{{ chat_group.groupchat_name }}</h3>
+        <div class="d-flex">
+            {% if user == chat_group.admin %}
+            <a href="{% url 'edit_chatroom' chat_group.group_name %}">
+                <div class="pen">
+                    <svg width="16" height="16">
+                        <path d="M11.013 1.427a1.75 1.75 0 0 1 2.474 0l1.086 1.086a1.75 1.75 0 0 1 0 2.474l-8.61 8.61c-.21.21-.47.364-.756.445l-3.251.93a.75.75 0 0 1-.927-.928l.929-3.25c.081-.286.235-.547.445-.758l8.61-8.61Zm.176 4.823L9.75 4.81l-6.286 6.287a.253.253 0 0 0-.064.108l-.558 1.953 1.953-.558a.253.253 0 0 0 .108-.064Zm1.238-3.763a.25.25 0 0 0-.354 0L10.811 3.75l1.439 1.44 1.263-1.263a.25.25 0 0 0 0-.354Z"></path>
+                    </svg>
+                </div>
+            </a>
+            {% endif %}
+            <a href="{% url 'leave_chatroom' chat_group.group_name %}">
+                <div class="door">
+                    <svg width="16px" height="16px" >
+                        <g fill="#2e3436">
+                            <path d="m 13 5 v 0.003906 c 0.265625 0 0.519531 0.105469 0.707031 0.289063 l 2 2 c 0.390625 0.390625 0.390625 1.023437 0 1.414062 l -2 2 c -0.1875 0.183594 -0.441406 0.289063 -0.707031 0.285157 v 0.007812 h -1 v -2 h -5 c -0.550781 0 -1 -0.449219 -1 -1 s 0.449219 -1 1 -1 h 5 v -2 z m 0 0"/>
+                            <path d="m 4 1 c -1.644531 0 -3 1.355469 -3 3 v 8 c 0 1.644531 1.355469 3 3 3 h 4 c 1.644531 0 3 -1.355469 3 -3 v -1 c 0 -0.550781 -0.449219 -1 -1 -1 s -1 0.449219 -1 1 v 1 c 0 0.570312 -0.429688 1 -1 1 h -4 c -0.570312 0 -1 -0.429688 -1 -1 v -8 c 0 -0.570312 0.429688 -1 1 -1 h 4 c 0.570312 0 1 0.429688 1 1 v 1 c 0 0.550781 0.449219 1 1 1 s 1 -0.449219 1 -1 v -1 c 0 -1.644531 -1.355469 -3 -3 -3 z m 0 0"/>
+                        </g>
+                    </svg>
+                </div>
+            </a>
+        </div>
+    </div>
+    {% endif %}
     {% if other_user %}
     <h4 class="text-start fw-bold mt-3">Direct Message</h4>
-    {% else %}
+    {% endif %}
+    {% if chat_group.group_name == "public-chat" %}
     <h3 class="text-start fw-bold mt-3">Public Chat</h3>
     {% endif %}
     <div class="text-center bg-dark py-2 rounded-top" style="color: blanchedalmond;">
@@ -17,11 +44,21 @@
                 <span class="text-secondary fw-bold small">@{{other_user.profile}}</span>
             </div>
         </a>
+        {% elif chat_group.groupchat_name %}
+        <ul class="list-group list-group-horizontal d-flex justify-content-center" style="list-style-type: none;">
+            {% for member in chat_group.members.all %}
+            <li>
+                <a href="{% url 'profile' member.username %}" style="text-decoration: none;">
+                    <img src="{{ member.profile.avatar }}" alt="avatar" style="height: 40px; border-radius: 50%; margin-right: 10px;">
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
         {% else %}
         <span id="online-count"></span>online
         {% endif %}
     </div>
-    <div class="mx-auto bg-dark text-light p-3 pt-4 rounded-bottom flex-grow-1 w-100 w-md-75 w-lg-50 overflow-y-auto" style="height: 65vh;" id="chat_messages">
+    <div class="mx-auto bg-dark text-light p-3 rounded-bottom flex-grow-1 w-100 w-md-75 w-lg-50 overflow-y-auto" style="height: 65vh;" id="chat_messages">
         {% for message in chat_messages reversed %}
             {% include 'chat/chat_message.html' %}
         {% endfor %}

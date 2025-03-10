@@ -31,6 +31,43 @@
         .bio {
             height: 100px;
         }
+        input[type="checkbox"]{
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            width: 40px;
+            height: 40px;
+            border: 2px solid rgb(100, 100, 100);
+            display: inline-block;
+            position: relative;
+            cursor: pointer;
+            border-radius: 10%;
+        }
+        input[type="checkbox"]:checked::before{
+            content: "X";
+            font-size: 40px;    
+            font-weight: bold;
+            color: red;
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .pen {
+            padding: 10px;
+            border-radius: 10%;
+        }
+        .pen:hover{
+            background-color: rgb(104, 104, 255);
+        }
+        .door {
+            padding: 10px;
+            border-radius: 10%;
+        }
+        .door:hover{
+            background-color: rgb(255, 60, 60);
+        }
+
     </style>
 </head>
 <body class="bg-light">  
@@ -47,10 +84,19 @@
                         <ul class="dropdown-menu dropdown-menu-dark">
                             <li><a class="dropdown-item" href="{% url 'home' %}">Public</a></li>
                             {% for chatroom in user.chat_groups.all %}
+                                {% if chatroom.groupchat_name %}
+                                <li><a class="dropdown-item" href="{% url 'chatroom' chatroom.group_name %}">
+                                    {{ chatroom.groupchat_name|slice:":30" }}
+                                </a></li>
+                                {% endif %}
+                            {% endfor %}
+                            {% for chatroom in user.chat_groups.all %}
                                 {% if chatroom.is_private %}
                                     {% for member in chatroom.members.all %}
                                         {% if member != user %}
-                                        <li><a class="dropdown-item" href="{% url 'chatroom' chatroom.group_name %}">{{ member.profile.name }}</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'chatroom' chatroom.group_name %}">
+                                            {{ member.profile.name }}
+                                        </a></li>
                                         {% endif %}
                                     {% endfor %}
                                 {% endif %}
@@ -64,7 +110,7 @@
                         <ul class="dropdown-menu dropdown-menu-dark">
                             <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
                             <li><a class="dropdown-item" href="{% url 'profile_edit' %}">Edit Profile</a></li>
-                            <li><a class="dropdown-item" href="#">Create Chat</a></li>
+                            <li><a class="dropdown-item" href="{% url 'new_groupchat' %}">Create Chat</a></li>
                             <form method="POST" action="{% url 'logout' %}" id="logout-form" style="display: none;">
                                 {% csrf_token %}
                             </form>
