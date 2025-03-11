@@ -1,4 +1,7 @@
 info.txt
 **/__pycache__/
 __pycache__/
+migrations/
+venv/
 db.sqlite3
+.env
