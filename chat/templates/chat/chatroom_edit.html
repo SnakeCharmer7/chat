@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     {% if member != chat_group.admin %}
-                    <input type="checkbox" name="remove_members" value="{{ member.id }}">
+                    <input class="check" type="checkbox" name="remove_members" value="{{ member.id }}">
                     {% endif %}
                 </div>
                 {% endfor %}
