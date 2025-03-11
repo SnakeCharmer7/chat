@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views import generic
+from django.views import generic, View
 from django.urls import reverse_lazy
 from django.http import Http404
 from .models import *
@@ -69,7 +69,7 @@ class ChatView(LoginRequiredMixin, generic.DetailView):
         return self.get(request, *args, **kwargs)
 
 
-class GetOrCreateChatroomView(LoginRequiredMixin, generic.View):
+class GetOrCreateChatroomView(LoginRequiredMixin, View):
     def get(self, request, username):
         if request.user.username == username:
             return redirect('home')
@@ -89,10 +89,14 @@ class GetOrCreateChatroomView(LoginRequiredMixin, generic.View):
         return redirect('chatroom', chatroom_name=chatroom.group_name)
 
 
-def create_groupchat(request):
-    form = NewGroupForm()
+class CreateGroupChatView(View):
+    template_name = "chat/create_groupchat.html"
 
-    if request.method == 'POST':
+    def get(self, request):
+        form = NewGroupForm()
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
         form = NewGroupForm(request.POST)
         if form.is_valid():
             new_groupchat = form.save(commit=False)
@@ -100,50 +104,54 @@ def create_groupchat(request):
             new_groupchat.save()
             new_groupchat.members.add(request.user)
             return redirect('chatroom', new_groupchat.group_name)
-
-    context = {
-        'form': form
-    }
-    return render(request, 'chat/create_groupchat.html', context)
+        
+        return render(request, self.template_name, {'form': form})
 
 
-def chatroom_edit_view(request, chatroom_name):
-    chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
-    if request.user != chat_group.admin:
-        raise Http404()
+class ChatroomEditView(generic.FormView):
+    template_name = 'chat/chatroom_edit.html'
+    form_class = ChatroomEditForm
 
-    form = ChatroomEditForm(instance=chat_group)
+    def dispatch(self, request, *args, **kwargs):
+        self.chat_group = get_object_or_404(ChatGroup, group_name=self.kwargs['chatroom_name'])
+        if request.user != self.chat_group.admin:
+            raise Http404()
+        return super().dispatch(request, *args, **kwargs)
 
-    if request.method == "POST":
-        form = ChatroomEditForm(request.POST, instance=chat_group)
-        if form.is_valid():
-            form.save()
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['instance'] = self.chat_group
+        return kwargs
 
-            remove_members = request.POST.getlist('remove_members')
-            for member_id in remove_members:
-                member = User.objects.get(id=member_id)
-                chat_group.members.remove(member)
-            
-            return redirect('chatroom', chatroom_name)
+    def form_valid(self, form):
+        form.save()
+        remove_members = self.request.POST.getlist('remove_members')
+        for member_id in remove_members:
+            member = User.objects.get(id=member_id)
+            self.chat_group.members.remove(member)
+        return redirect('chatroom', self.chat_group.group_name)
 
-    context = {
-        'form': form,
-        'chat_group': chat_group
-    }
-
-    return render(request, 'chat/chatroom_edit.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['chat_group'] = self.chat_group
+        return context
 
 
-def chatroom_delete_view(request, chatroom_name):
-    chat_group = get_object_or_404(ChatGroup, group_name=chatroom_name)
-    if request.user != chat_group.admin:
-        raise Http404()
+class ChatroomDeleteView(generic.DeleteView):
+    model = ChatGroup
+    template_name = 'chat/chatroom_delete.html'
+    success_url = reverse_lazy('home')
+
+    def get_object(self, queryset=None):
+        chat_group = get_object_or_404(ChatGroup, group_name=self.kwargs['chatroom_name'])
+        if self.request.user != chat_group.admin:
+            raise Http404()
+        return chat_group
     
-    if request.method == "POST":
-        chat_group.delete()
-        return redirect('home')
-
-    return render(request, 'chat/chatroom_delete.html', {'chat_group': chat_group})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['chat_group'] = self.get_object()
+        return context
 
 
 def chatroom_leave_view(request, chatroom_name):
@@ -153,10 +161,10 @@ def chatroom_leave_view(request, chatroom_name):
     
     if request.user == chat_group.admin:
         chat_group.delete()
-        return redirect('home')
     else:
         chat_group.members.remove(request.user)
-        return redirect('home')
+    
+    return redirect('home')
 
 
 class SingUpView(generic.CreateView):
