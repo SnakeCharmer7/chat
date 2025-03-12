@@ -3,3 +3,13 @@ pillow
 django-cleanup
 django-allauth
 django-htmx
+daphne
+channels
+channels_redis
+cloudinary
+django-cloudinary-storage
+django-environ
+django-resized
+psycopg2
+psycopg2-binary
+redis
