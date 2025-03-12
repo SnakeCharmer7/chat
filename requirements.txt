@@ -13,4 +13,4 @@ python-dotenv>=1.0.0
 uvicorn>=0.22.0
 
 requests>=2.31.0
-environ
+django-environ
