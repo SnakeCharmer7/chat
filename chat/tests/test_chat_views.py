@@ -7,7 +7,7 @@ from chat.models import ChatGroup, GroupMessage
 
 @pytest.mark.django_db
 class TestChatView:
-
+    # tworzymy środowisko
     @pytest.fixture
     def setup_users_and_chatrooms(self, client):
         user1 = User.objects.create_user(username='user1', password='password')
@@ -32,8 +32,6 @@ class TestChatView:
         assert response.status_code == 200
         assert "Hello from user1" in response.content.decode()
         assert "Hello from user2" in response.content.decode()
-
-    
 
     def test_message_redirect_on_success(self, setup_users_and_chatrooms):
         client, user1, _, chat_group_public, _ = setup_users_and_chatrooms
