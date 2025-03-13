@@ -36,9 +36,9 @@ if ENVIRONMENT == 'development':
 else:
     DEBUG = False
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'chat-w3g7.onrender.com/*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*']
 
-CSRF_THRUSTED_ORIGINS = ['https://chat-w3g7.onrender.com/*']
+CSRF_THRUSTED_ORIGINS = [ '*' ]
 
 # Application definition
 
