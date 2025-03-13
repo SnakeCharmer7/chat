@@ -5,7 +5,7 @@ from channels.security.websocket import AllowedHostsOriginValidator
 from channels.auth import AuthMiddlewareStack
 from chat import routing
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "chat_project.settings")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'chat_project.settings')
 
 import django
 django.setup()
